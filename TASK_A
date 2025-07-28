@@ -1,0 +1,53 @@
+//Task-A: Apply Linear Search Approach 
+//• Implement a linear search algorithm, linear search algorithm (O(n)) is used to traverse the data and determine the min/max values for each sensor type. 
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define SIZE 100
+
+int main() {
+    float temperature[SIZE], pressure[SIZE];
+    float temp_min = -20.0, temp_max = 50.0;
+    float pres_min = 950.0, pres_max = 1050.0;
+
+    srand(time(0));
+
+    // Generate sensor data
+    for (int i = 0; i < SIZE; i++) {
+        temperature[i] = ((float)rand() / RAND_MAX) * (temp_max - temp_min) + temp_min;
+        pressure[i] = ((float)rand() / RAND_MAX) * (pres_max - pres_min) + pres_min;
+    }
+
+    // Start time in nanoseconds
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    // Linear search for min temperature and max pressure (O(n))
+    float min_temp = temperature[0];
+    float max_pres = pressure[0];
+
+    for (int i = 1; i < SIZE; i++) {
+        if (temperature[i] < min_temp)
+            min_temp = temperature[i];
+        if (pressure[i] > max_pres)
+            max_pres = pressure[i];
+    }
+
+    // End time in nanoseconds
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    // Calculate time taken in nanoseconds
+    long seconds = end.tv_sec - start.tv_sec;
+    long nanoseconds = end.tv_nsec - start.tv_nsec;
+    long total_ns = seconds * 1e9 + nanoseconds;
+
+    // Output
+    printf("Minimum Temperature = %.2f °C\n", min_temp);
+    printf("Maximum Pressure = %.2f hPa\n", max_pres);
+    printf("Execution Time = %d nanoseconds\n", total_ns);
+
+    return 0;
+}
