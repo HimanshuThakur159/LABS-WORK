@@ -1,0 +1,75 @@
+//Task-B: Naive Pairwise Comparison Approach 
+//•	For each element, compare it with every other element. For minVal: 
+//For i = 0 to n-1: check if arr[i] is less than every other arr[j]. Mark as minimum if it satisfies all conditions. 
+//•	Repeat similarly for maxVal. 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define SIZE 100  
+
+// Function to find min using pairwise comparison (O(n²))
+float naive_min(float arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        int is_min = 1;
+        for (int j = 0; j < n; j++) {
+            if (arr[j] < arr[i]) {
+                is_min = 0;
+                break;
+            }
+        }
+        if (is_min)
+            return arr[i];
+    }
+    return arr[0];  // fallback
+}
+
+// Function to find max using pairwise comparison (O(n²))
+float naive_max(float arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        int is_max = 1;
+        for (int j = 0; j < n; j++) {
+            if (arr[j] > arr[i]) {
+                is_max = 0;
+                break;
+            }
+        }
+        if (is_max)
+            return arr[i];
+    }
+    return arr[0];  // fallback
+}
+
+int main() {
+    float temperature[SIZE], pressure[SIZE];
+    float temp_min = -20.0, temp_max = 50.0;
+    float pres_min = 950.0, pres_max = 1050.0;
+
+    srand(time(0));
+    for (int i = 0; i < SIZE; i++) {
+        temperature[i] = ((float)rand() / RAND_MAX) * (temp_max - temp_min) + temp_min;
+        pressure[i] = ((float)rand() / RAND_MAX) * (pres_max - pres_min) + pres_min;
+    }
+
+    // Use clock_gettime for nanosecond precision
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    float min_temp = naive_min(temperature, SIZE);
+    float max_pres = naive_max(pressure, SIZE);
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    // Calculate time in nanoseconds
+    long seconds = end.tv_sec - start.tv_sec;
+    long nanoseconds = end.tv_nsec - start.tv_nsec;
+    long total_ns = seconds * 1e9 + nanoseconds;
+
+    // Output
+    printf("Minimum Temperature = %.2f °C\n", min_temp);
+    printf("Maximum Pressure = %.2f hPa\n", max_pres);
+    printf("Execution Time = %ld nanoseconds\n", total_ns);
+
+    return 0;
+}
